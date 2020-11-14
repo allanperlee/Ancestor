@@ -372,8 +372,8 @@
           }
         ],
         "contractDependencies": [
-          890,
-          1503
+          1503,
+          890
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -5854,8 +5854,8 @@
           }
         ],
         "contractDependencies": [
-          890,
-          1503
+          1503,
+          890
         ],
         "contractKind": "contract",
         "documentation": null,
@@ -11285,7 +11285,7 @@
   },
   "networks": {},
   "schemaVersion": "3.0.15",
-  "updatedAt": "2020-11-11T21:09:31.131Z",
+  "updatedAt": "2020-11-11T21:49:54.832Z",
   "devdoc": {
     "methods": {
       "isOwner()": {
