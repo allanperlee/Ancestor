@@ -1,15 +1,22 @@
+const { assert } = require("console");
 const Ancestor = artifacts.require("./abilities.sol");
+const utils = require("./utils.js");
 
 contract("Ancestor", accounts => {
-  it("...should create a new, random Ancestor", async () => {
-    const contractInstance = await Ancestor.deployed();
-    
-    // Create a new Ancestor
-    const result = await contractInstance.makeRandomAncestor("bruno", { from: accounts[0] });
+  let contractInstance;
+  const ancestorNames = ["bruno", "bruna"];
 
-    // Will reuse this for a getter function such as getting the ID or amount of ancestors to account
-    //const storedData = await simpleStorageInstance.get.call();
-  
+  beforeEach(async () => {
+    contractInstance = await Ancestor.deployed();
+  })
+  it("...should create a new, random Ancestor", async () => {
+    // Create a new Ancestor
+    const result = await contractInstance._makeRandomAncestor(ancestorNames[0], { from: accounts[0] });
     assert.equal(result.receipt.status, true);
   });
+
+  it("...should not allow two Ancestors", async () =>{
+    await contractInstance._makeRandomAncestor(ancestorNames[0], { from: accounts[0] });
+    utils.shouldThrow(await contractInstance._makeRandomAncestor(ancestorNames[1], {from: accounts[0]}));
+  })
 });
