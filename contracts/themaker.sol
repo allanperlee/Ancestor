@@ -28,6 +28,7 @@ contract TheMaker is Ownable {
 
     mapping (uint => address) public ancestorToOwner;
     mapping (address => uint) public ancestorCount;
+    mapping (address => uint) public partnerCount;
 
     function _createAncestor(string memory _name, uint _dna) internal {
         uint id = ancestors.push(Ancestor(_name, _dna, 0, uint32(now + cooldownTime), uint32(0), uint32(0), false, false)) - 1;

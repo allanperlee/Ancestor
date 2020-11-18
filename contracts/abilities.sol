@@ -13,25 +13,30 @@ contract Abilities is Helper {
     return uint(keccak256(abi.encodePacked(now, msg.sender, randNonce))) % _modulus;
   }
 
-    function _date(uint _ancestorId) external onlyOwnerOf(_ancestorId) {
+    function _date(uint _ancestorId, uint _crush) external onlyOwnerOf(_ancestorId) {
         Ancestor storage myAncestor = ancestors[_ancestorId];
+        Ancestor storage crush = ancestors[_crush];
         uint rand = randMod(100);
         if (rand <= dateProbability) {
             myAncestor.isTaken = true;
         } else {
             myAncestor.rejections = myAncestor.rejections.add(1);
+            crush.scalps = crush.scalps.add(1);
             _triggerCooldown(myAncestor);
         }
     }
 
-    function _bringHome(uint _ancestorId) external onlyOwnerOf(_ancestorId) {
+    function _bringHome(uint _ancestorId, uint _crush) external onlyOwnerOf(_ancestorId) {
         Ancestor storage myAncestor = ancestors[_ancestorId];
+        Ancestor storage crush = ancestors[_crush];
         require(myAncestor.isTaken == true);       
         uint rand = randMod(100);
         if (rand <= bringHomeProbability) {
             myAncestor.canCrawl == true;
         } else {
             myAncestor.rejections = myAncestor.rejections.add(1);
+            myAncestor.isTaken = false;
+            crush.scalps = crush.scalps.add(1);
             _triggerCooldown(myAncestor);
         }
     }
@@ -44,18 +49,22 @@ contract Abilities is Helper {
             myAncestor.traumaCount = myAncestor.scalps.add(1);
         } else {
             myAncestor.rejections = myAncestor.rejections.add(1);
+            myAncestor.canCrawl = false;
             _triggerCooldown(myAncestor);
         }
     }
 
-    function _traumatize(uint _ancestorId) external onlyOwnerOf(_ancestorId) {
+    function _traumatize(uint _ancestorId, uint _crush) external onlyOwnerOf(_ancestorId) {
         Ancestor storage myAncestor = ancestors[_ancestorId];
+        Ancestor storage crush = ancestors[_crush];
         require(myAncestor.traumaCount > uint32(0));
         uint rand = randMod(100);
         if (rand <= donScalpProbability) {
             myAncestor.traumaCount = myAncestor.traumaCount.add(1);
-        } else {
+            } else {
             myAncestor.rejections = myAncestor.rejections.add(1);
+            myAncestor.isTaken = false;
+            crush.scalps = crush.scalps.sub(1);
             _triggerCooldown(myAncestor);
         }
 
