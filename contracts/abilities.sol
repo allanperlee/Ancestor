@@ -19,6 +19,7 @@ contract Abilities is Helper {
         uint rand = randMod(100);
         if (rand <= dateProbability) {
             myAncestor.isTaken = true;
+            partnerCount[msg.sender] = partnerCount[msg.sender].add(1);
         } else {
             myAncestor.rejections = myAncestor.rejections.add(1);
             crush.scalps = crush.scalps.add(1);
@@ -61,12 +62,15 @@ contract Abilities is Helper {
         uint rand = randMod(100);
         if (rand <= donScalpProbability) {
             myAncestor.traumaCount = myAncestor.traumaCount.add(1);
+            partnerCount[msg.sender] = partnerCount[msg.sender].sub(1);
             } else {
             myAncestor.rejections = myAncestor.rejections.add(1);
             myAncestor.isTaken = false;
             crush.scalps = crush.scalps.sub(1);
+            partnerCount[msg.sender] = partnerCount[msg.sender].sub(1);
             _triggerCooldown(myAncestor);
         }
 
     }
+
 }
