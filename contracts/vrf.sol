@@ -1,4 +1,4 @@
-pragma solidity 0.6.6;
+pragma solidity >=0.5.0 <0.6.0;
 
 import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";
 
@@ -6,8 +6,6 @@ contract RandomNumberConsumer is VRFConsumerBase {
     
     bytes32 internal keyHash;
     uint256 internal fee;
-    
-    uint256 public randomResult;
     
     /**
      * Constructor inherits VRFConsumerBase
@@ -34,3 +32,4 @@ contract RandomNumberConsumer is VRFConsumerBase {
         require(LINK.balanceOf(address(this)) >= fee, "Not enough LINK - fill contract with faucet");
         return requestRandomness(keyHash, fee, userProvidedSeed);
     }
+}
