@@ -1,11 +1,13 @@
 pragma solidity >=0.5.0 <0.6.0;
 
-import "@chainlink/contracts/src/v0.6/VRFConsumerBase.sol";
+import "https://raw.githubusercontent.com/smartcontractkit/chainlink/master/evm-contracts/src/v0.6/VRFConsumerBase.sol";
 
 contract RandomNumberConsumer is VRFConsumerBase {
     
     bytes32 internal keyHash;
     uint256 internal fee;
+    
+    uint256 public randomResult;
     
     /**
      * Constructor inherits VRFConsumerBase
@@ -31,5 +33,12 @@ contract RandomNumberConsumer is VRFConsumerBase {
     function getRandomNumber(uint256 userProvidedSeed) public returns (bytes32 requestId) {
         require(LINK.balanceOf(address(this)) >= fee, "Not enough LINK - fill contract with faucet");
         return requestRandomness(keyHash, fee, userProvidedSeed);
+    }
+
+     /**
+     * Callback function used by VRF Coordinator
+     */
+    function fulfillRandomness(bytes32 requestId, uint256 randomness) external {
+        randomResult = randomness;
     }
 }

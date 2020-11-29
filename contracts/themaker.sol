@@ -7,8 +7,6 @@ contract TheMaker is Ownable, RandomNumberConsumer {
     using SafeMath for uint256;
     using SafeMath16 for uint16;
     using SafeMath32 for uint32;
-
-    uint256 internal randomResult = 0;
     
     event NewAncestor(uint id, string name, uint dna);
     uint dnaDigits = 16;
@@ -47,8 +45,8 @@ contract TheMaker is Ownable, RandomNumberConsumer {
      * Callback function used by VRF Coordinator
      */
     function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
-        _createAncestor(_name, randomness);
         randomResult = randomness;
+         _createAncestor(_name, randomness);
     }
 }
 }
