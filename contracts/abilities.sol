@@ -9,7 +9,7 @@ contract Abilities is Helper {
     uint randNonce = 0;
 
    function randMod(uint _modulus) internal returns(uint) {
-    randNonce = randNonce++;
+    randNonce = randNonce.add(1);
     return uint(keccak256(abi.encodePacked(now, msg.sender, randNonce))) % _modulus;
   }
 
@@ -61,12 +61,10 @@ contract Abilities is Helper {
         uint rand = randMod(100);
         if (rand <= donScalpProbability) {
             myAncestor.traumaCount = myAncestor.traumaCount.add(1);
-            partnerCount[msg.sender] = partnerCount[msg.sender].sub(1);
             } else {
             myAncestor.rejections = myAncestor.rejections.add(1);
             myAncestor.isTaken = false;
             crush.scalps = crush.scalps.sub(1);
-            partnerCount[msg.sender] = partnerCount[msg.sender].sub(1);
             _triggerCooldown(myAncestor);
         }
 

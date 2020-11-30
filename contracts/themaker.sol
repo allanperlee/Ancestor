@@ -1,9 +1,8 @@
 pragma solidity >=0.5.0 <0.6.0;
 import "./ownable.sol";
 import "./safemath.sol";
-import "./vrf.sol";
 
-contract TheMaker is Ownable, RandomNumberConsumer {
+contract TheMaker is Ownable {
     using SafeMath for uint256;
     using SafeMath16 for uint16;
     using SafeMath32 for uint32;
@@ -29,24 +28,25 @@ contract TheMaker is Ownable, RandomNumberConsumer {
     mapping (uint => address) public ancestorToOwner;
     mapping (address => uint) public ancestorCount;
 
-    function _createAncestor(string memory _name, uint _dna) internal {
+    function _makeAncestor(string memory _name, uint _dna) internal {
         uint id = ancestors.push(Ancestor(_name, _dna, 0, uint32(now + cooldownTime), uint32(0), uint32(0), false, false)) - 1;
         ancestorToOwner[id] = msg.sender;
         emit NewAncestor(id, _name, _dna);
     }
 
-    function _makeRandomAncestor(string memory _name, uint256 userSeed) public {
+    function _makeRandomAncestor(string memory _name, uint256 seed) public {
         require(ancestorCount[msg.sender] == 0);
-        bytes32 requestId = requestRandomness(keyHash, fee, userSeed);
-        return requestId;
+        uint dna = _generateRandomDna(seed);
+        dna = dna - dna % 100;
+        _makeAncestor(_name, dna);
     }
 
-     /**
-     * Callback function used by VRF Coordinator
-     */
-    function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
-        randomResult = randomness;
-         _createAncestor(_name, randomness);
+    function _generateRandomDna(uint seed) private view returns (uint) {
+        uint rand = _randomGenerator(seed);
+        return rand % dnaModulus;
     }
-}
+
+    function _randomGenerator(uint seed) public view returns (uint) {
+        return uint(keccak256(abi.encode(blockhash(block.number - 1), seed)));
+    }
 }
