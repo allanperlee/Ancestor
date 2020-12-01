@@ -6,17 +6,11 @@ contract Abilities is Helper {
     uint bringHomeProbability = 40;
     uint traumatizeProbability = 20;
     uint donScalpProbability = 20;
-    uint randNonce = 0;
 
-   function randMod(uint _modulus) internal returns(uint) {
-    randNonce = randNonce.add(1);
-    return uint(keccak256(abi.encodePacked(now, msg.sender, randNonce))) % _modulus;
-  }
-
-    function _date(uint _ancestorId, uint _crush) external onlyOwnerOf(_ancestorId) {
+    function _date(uint _ancestorId, uint _crush, uint _luckyNumber) external onlyOwnerOf(_ancestorId) {
         Ancestor storage myAncestor = ancestors[_ancestorId];
         Ancestor storage crush = ancestors[_crush];
-        uint rand = randMod(100);
+        uint rand = _randomGenerator(_luckyNumber) % 100;
         if (rand <= dateProbability) {
             myAncestor.isTaken = true;
         } else {
@@ -26,11 +20,11 @@ contract Abilities is Helper {
         }
     }
 
-    function _bringHome(uint _ancestorId, uint _crush) external onlyOwnerOf(_ancestorId) {
+    function _bringHome(uint _ancestorId, uint _crush, uint _luckyNumber) external onlyOwnerOf(_ancestorId) {
         Ancestor storage myAncestor = ancestors[_ancestorId];
         Ancestor storage crush = ancestors[_crush];
         require(myAncestor.isTaken == true);       
-        uint rand = randMod(100);
+        uint rand =  _randomGenerator(_luckyNumber) % 100;
         if (rand <= bringHomeProbability) {
             myAncestor.canCrawl == true;
         } else {
@@ -41,10 +35,10 @@ contract Abilities is Helper {
         }
     }
     
-    function donScalp(uint _ancestorId) external onlyOwnerOf(_ancestorId) {
+    function donScalp(uint _ancestorId, uint _luckyNumber) external onlyOwnerOf(_ancestorId) {
         Ancestor storage myAncestor = ancestors[_ancestorId];
         require(myAncestor.canCrawl == true);
-        uint rand = randMod(100);
+        uint rand = _randomGenerator(_luckyNumber) % 100;
         if (rand <= traumatizeProbability) {
             myAncestor.traumaCount = myAncestor.scalps.add(1);
         } else {
@@ -54,11 +48,11 @@ contract Abilities is Helper {
         }
     }
 
-    function _traumatize(uint _ancestorId, uint _crush) external onlyOwnerOf(_ancestorId) {
+    function _traumatize(uint _ancestorId, uint _crush, uint _luckyNumber) external onlyOwnerOf(_ancestorId) {
         Ancestor storage myAncestor = ancestors[_ancestorId];
         Ancestor storage crush = ancestors[_crush];
         require(myAncestor.traumaCount > uint32(0));
-        uint rand = randMod(100);
+        uint rand = _randomGenerator(_luckyNumber) % 100;
         if (rand <= donScalpProbability) {
             myAncestor.traumaCount = myAncestor.traumaCount.add(1);
             } else {

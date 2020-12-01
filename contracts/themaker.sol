@@ -26,12 +26,18 @@ contract TheMaker is Ownable {
     Ancestor[] public ancestors;
 
     mapping (uint => address) public ancestorToOwner;
-    mapping (address => uint) public ancestorCount;
+    mapping (address => uint) ancestorCount;
 
     function _makeAncestor(string memory _name, uint _dna) internal {
         uint id = ancestors.push(Ancestor(_name, _dna, 0, uint32(now + cooldownTime), uint32(0), uint32(0), false, false)) - 1;
         ancestorToOwner[id] = msg.sender;
+        ancestorCount[msg.sender]++;
         emit NewAncestor(id, _name, _dna);
+    }
+
+    function _generateRandomDna(uint seed) private view returns (uint) {
+        uint rand = _randomGenerator(seed);
+        return rand % dnaModulus;
     }
 
     function _makeRandomAncestor(string memory _name, uint256 seed) public {
@@ -41,12 +47,7 @@ contract TheMaker is Ownable {
         _makeAncestor(_name, dna);
     }
 
-    function _generateRandomDna(uint seed) private view returns (uint) {
-        uint rand = _randomGenerator(seed);
-        return rand % dnaModulus;
-    }
-
-    function _randomGenerator(uint seed) public view returns (uint) {
+    function _randomGenerator(uint seed) internal view returns (uint) {
         return uint(keccak256(abi.encode(blockhash(block.number - 1), seed)));
     }
 }
