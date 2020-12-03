@@ -6,9 +6,11 @@ import "./App.css";
 
 class App extends Component {
   state = { ancestorName: "", web3: null, accounts: null, contract: null, newValue: "" };
-
+  
   componentDidMount = async () => {
     try {
+      const contractAddr = '0x844A5f9f0d57c3f69eBfeDbE721Df2324C8fCC280';
+      
       // Get network provider and web3 instance.
       const web3 = await getWeb3();
 
@@ -44,18 +46,18 @@ class App extends Component {
 
     const {accounts, contract} = this.state;
     await contract._makeRandomAncestor(this.state.newValue, { from: accounts[0] })
-    const response = await contract._makeRandomAncestor();
+    const response = await contract.ancestorCount();
     this.setState({ancestorName: response});
   }
 
   runExample = async () => {
     const { accounts, contract } = this.state;
 
-    // Stores a given value, 5 by default.
+    // Stores a given value
     await contract.methods._makeRandomAncestor("").send({ from: accounts[0] });
 
     // Get the value from the contract to prove it worked.
-    const response = await contract.methods.balanceOf(accounts[0]).call();
+    const response = await contract.methods.ancestorCount(accounts[0]).call();
 
     // Update state with the result.
     this.setState({ ancestorName: response });
@@ -78,9 +80,13 @@ class App extends Component {
           Try changing the value stored on <strong>line 40</strong> of App.js.
         </p>
         <div>The stored value is: {this.state.storageValue}</div>
+        <form onSubmit={this.handleSubmit}>
+          <input type="text" value={this.state.newValue} onChange={this.handleChange.bind}{...this}/>
+          <input type="submit" value="Submit"/>
+        </form>
       </div>
     );
   }
-}
+  }
 
 export default App;
