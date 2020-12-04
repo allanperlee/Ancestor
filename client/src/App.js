@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Abilities from "./contracts/Abilities.json";
+import { abi, address} from "./exports.js";
 import getWeb3 from "./getWeb3";
 
 import "./App.css";
@@ -9,7 +9,6 @@ class App extends Component {
   
   componentDidMount = async () => {
     try {
-      const contractAddr = '0x844A5f9f0d57c3f69eBfeDbE721Df2324C8fCC280';
       
       // Get network provider and web3 instance.
       const web3 = await getWeb3();
@@ -18,11 +17,8 @@ class App extends Component {
       const accounts = await web3.eth.getAccounts();
 
       // Get the contract instance.
-      const networkId = await web3.eth.net.getId();
-      const deployedNetwork = Abilities.networks[networkId];
       const instance = new web3.eth.Contract(
-        Abilities.abi,
-        deployedNetwork && deployedNetwork.address,
+        abi, address
       );
 
       // Set web3, accounts, and contract to the state, and then proceed with an
@@ -54,7 +50,7 @@ class App extends Component {
     const { accounts, contract } = this.state;
 
     // Stores a given value
-    await contract.methods._makeRandomAncestor("").send({ from: accounts[0] });
+    await contract.methods._makeRandomAncestor("Bruno", 1234).send({ from: accounts[0] });
 
     // Get the value from the contract to prove it worked.
     const response = await contract.methods.ancestorCount(accounts[0]).call();
