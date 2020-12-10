@@ -33,11 +33,11 @@ class App extends Component {
     }
   };
 
-  async handleChange(event) {
+  handleChange = async(event) => {
     this.setState({newValue: event.target.value});
   }
 
-  async handleSubmit(event) {
+  handleSubmit = async(event) => {
     event.preventDefault();
 
     const {accounts, contract} = this.state;
@@ -65,22 +65,20 @@ class App extends Component {
     }
     return (
       <div className="App">
-        <h1>Good to Go!</h1>
-        <p>Your Truffle Box is installed and ready.</p>
-        <h2>Smart Contract Example</h2>
-        <p>
-          If your contracts compiled and migrated successfully, below will show
-          a stored value of 5 (by default).
-        </p>
-        <p>
-          Try changing the value stored on <strong>line 40</strong> of App.js.
-        </p>
-        <div>The stored value is: {this.state.storageValue}</div>
+        <h1>Welcome, Ancestor</h1>
+        <p>Enter your name and a seed for a randomly created Ancestor.</p>
+        <div>Enter a name: {this.state.ancestorName}</div>
         <form onSubmit={this.handleSubmit}>
           <input type="text" value={this.state.newValue} onChange={this.handleChange.bind}{...this}/>
           <input type="submit" value="Submit"/>
         </form>
-      </div>
+        <div>Enter a seed: </div>
+        <form onSubmit={this.handleSubmit}>
+          <input type="text" value={this.state.newValue} onChange={this.handleChange.bind}{...this}/>
+          <input type="submit" value="Submit"/>
+        </form>
+        </div>
+
     );
   }
   }

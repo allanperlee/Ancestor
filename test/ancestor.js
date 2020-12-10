@@ -8,7 +8,9 @@ contract("Ancestor", accounts => {
   beforeEach(async () => {
     contractInstance = await Ancestor.deployed();
     seed = 1234;
+    seedTwo = 4321;
   })
+  
   //this test passes
   it("...should create a new, random Ancestor", async () => {
     const result = await contractInstance._makeRandomAncestor(ancestorNames[0], seed, { from: accounts[0] });
@@ -18,9 +20,15 @@ contract("Ancestor", accounts => {
   //so far allows two Ancestors per account
  it("...should not allow two Ancestors", async () =>{
     await contractInstance._makeRandomAncestor(ancestorNames[0], seed, { from: accounts[0] });
-    await utils.shouldThrow(await contractInstance._makeRandomAncestor(ancestorNames[1], seed, {from: accounts[0]})); 
+    await utils.shouldThrow(await contractInstance._makeRandomAncestor(ancestorNames[1], seedTwo, {from: accounts[0]})); 
   });
 
+  it("...should map one Ancestor per user initially", async () =>{
+    await contractInstance._makeRandomAncestor(ancestorNames[0], seed, {from: accounts[0]});
+    const result = await contractInstance.ancestorCount(accounts[0], {from: accounts[0]});
+    const expected = 1;
+    assert.equal(result, expected);
+  })
   //it("...should allow the Ancestor to date", async () => {
     //const result = await contractInstance._makeRandomAncestor(ancestorNames[0], seed, {from: accounts[0]});
     //const id = result.logs[0].args.ancestorId.toNumber();
