@@ -50,7 +50,7 @@ class App extends Component {
     const { accounts, contract } = this.state;
 
     // Stores a given value
-    await contract.methods._makeRandomAncestor("Bruno", 1234).send({ from: accounts[0] });
+    await contract.methods._makeRandomAncestor("Bruno").send({ from: accounts[0] });
 
     // Get the value from the contract to prove it worked.
     const response = await contract.methods.ancestorCount(accounts[0]).call();
@@ -66,19 +66,32 @@ class App extends Component {
     return (
       <div className="App">
         <h1>Welcome, Ancestor</h1>
-        <p>Enter your name and a seed for a randomly created Ancestor.</p>
+        <p>Enter your name for a random created Ancestor.</p>
         <div>Enter a name: {this.state.ancestorName}</div>
         <form onSubmit={this.handleSubmit}>
           <input type="text" value={this.state.newValue} onChange={this.handleChange.bind}{...this}/>
           <input type="submit" value="Submit"/>
         </form>
-        <div>Enter a seed: </div>
-        <form onSubmit={this.handleSubmit}>
-          <input type="text" value={this.state.newValue} onChange={this.handleChange.bind}{...this}/>
+        <div> Get balance of Ancestors</div>
+        <form>
+        <input type="text" value={this.state.newValue} onChange={this.handleChange.bind}{...this}/>
+          <input type="submit" value="Submit"/>
+        </form>
+        <div>
+          Date another
+        </div>
+        <form>
+        <input type="text" value={this.state.newValue} onChange={this.handleChange.bind}{...this}/>
+          <input type="submit" value="Submit"/>
+        </form>
+        <div>
+          Bring home
+        </div>
+        <form>
+        <input type="text" value={this.state.newValue} onChange={this.handleChange.bind}{...this}/>
           <input type="submit" value="Submit"/>
         </form>
         </div>
-
     );
   }
   }

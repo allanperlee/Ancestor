@@ -8,10 +8,12 @@ contract TheMaker is Ownable {
     using SafeMath32 for uint32;
     
     event NewAncestor(uint id, string name, uint dna);
+    
     uint dnaDigits = 16;
     uint dnaModulus = 10 ** dnaDigits;
     uint cooldownTime = 1 days;
-    
+    uint mintSeed = 1234;
+
     struct Ancestor{
         string name;
         uint dna;
@@ -40,9 +42,9 @@ contract TheMaker is Ownable {
         return rand % dnaModulus;
     }
 
-    function _makeRandomAncestor(string memory _name, uint256 seed) public {
+    function _makeRandomAncestor(string memory _name) public {
         require(ancestorCount[msg.sender] == 0);
-        uint dna = _generateRandomDna(seed);
+        uint dna = _generateRandomDna(mintSeed);
         dna = dna - dna % 100;
         _makeAncestor(_name, dna);
     }

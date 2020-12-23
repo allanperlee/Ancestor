@@ -1,5 +1,6 @@
 const Ancestor = artifacts.require("./abilities.sol");
 const utils = require("./utils.js");
+const time = require("./time.js");
 
 contract("Ancestor", accounts => {
   let contractInstance;
@@ -7,35 +8,31 @@ contract("Ancestor", accounts => {
 
   beforeEach(async () => {
     contractInstance = await Ancestor.deployed();
-    seed = 1234;
-    seedTwo = 4321;
   })
   
   //this test passes
   it("...should create a new, random Ancestor", async () => {
-    const result = await contractInstance._makeRandomAncestor(ancestorNames[0], seed, { from: accounts[0] });
+    const result = await contractInstance._makeRandomAncestor(ancestorNames[0], { from: accounts[0] });
     assert.equal(result.receipt.status, true);
   });
 
-  //so far allows two Ancestors per account
+  //reverts transaction
  it("...should not allow two Ancestors", async () =>{
-    await contractInstance._makeRandomAncestor(ancestorNames[0], seed, { from: accounts[0] });
-    await utils.shouldThrow(await contractInstance._makeRandomAncestor(ancestorNames[1], seedTwo, {from: accounts[0]})); 
+    await contractInstance._makeRandomAncestor(ancestorNames[0], { from: accounts[0] });
+    await utils.shouldThrow( contractInstance._makeRandomAncestor(ancestorNames[1], {from: accounts[0]})); 
   });
 
-  it("...should map one Ancestor per user initially", async () =>{
-    await contractInstance._makeRandomAncestor(ancestorNames[0], seed, {from: accounts[0]});
-    const result = await contractInstance.ancestorCount(accounts[0], {from: accounts[0]});
-    const expected = 1;
-    assert.equal(result, expected);
+  it("...should allow the Ancestor to date", async () => {
+    const luckyNumber = 1;
+    //first ancestor and its respective Id
+    const result = await contractInstance._makeRandomAncestor(ancestorNames[0],  {from: accounts[0]});
+    const id = result.logs[0].args.ancestorId.toNumber();
+    //second ancestor and respective id
+    const resultTwo = await contractInstance._makeRandomAncestor(ancestorNames[1], {from: accounts[1]});
+    const idTwo = result.logs[1].args.ancestorId.toNumber();
+    //used the import time to accelerate the time from creation of ancestor to "tomorrow"
+    await time.increase(time.duration.days(1));
+    await contractInstance._date(id, idTwo, luckyNumber, {from: accounts[0]});
+    assert.equal(result.receipt.status, true);
   })
-  //it("...should allow the Ancestor to date", async () => {
-    //const result = await contractInstance._makeRandomAncestor(ancestorNames[0], seed, {from: accounts[0]});
-    //const id = result.logs[0].args.ancestorId.toNumber();
-    //const resultTwo = await contractInstance._makeRandomAncestor(ancestorNames[1], seed, {from: accounts[1]});
-    //const idTwo = result.logs[1].args.ancestorId.toNumber();
-    //await time.increase(time.duration.days(1));
-    //await contractInstance._date(id, idTwo, {from: accounts[0]}, {from: accounts[1]});
-    //assert.equal(result.receipt.status, true);
-  //})
 });
