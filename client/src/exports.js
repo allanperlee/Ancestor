@@ -1,4 +1,4 @@
-export const address = '0x60803226A8863E84F07Cac1AaBdfA00d02FD81C1';
+export const address = '0x56Bf4A29A5ABE6946727c755b78aD79FDe9395c7';
 export const abi = [
   {
     "constant": false,
@@ -49,24 +49,6 @@ export const abi = [
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "_name",
-        "type": "string"
-      },
-      {
-        "name": "seed",
-        "type": "uint256"
-      }
-    ],
-    "name": "_makeRandomAncestor",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
     "inputs": [],
     "name": "renounceOwnership",
     "outputs": [],
@@ -86,6 +68,20 @@ export const abi = [
     ],
     "payable": false,
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "string"
+      }
+    ],
+    "name": "_makeRandomAncestor",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -180,25 +176,6 @@ export const abi = [
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "ancestorCount",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
     "type": "function"
   },
   {

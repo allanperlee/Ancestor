@@ -10,6 +10,8 @@ class App extends Component {
   componentDidMount = async () => {
     try {
       
+      this.handleChange = this.handleChange.bind(this);
+      this.handleSubmit = this.handleSubmit(this);
       // Get network provider and web3 instance.
       const web3 = await getWeb3();
 
@@ -38,7 +40,6 @@ class App extends Component {
   }
 
   handleSubmit = async(event) => {
-    event.preventDefault();
 
     const {accounts, contract} = this.state;
     await contract._makeRandomAncestor(this.state.newValue, { from: accounts[0] })
